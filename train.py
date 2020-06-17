@@ -6,9 +6,9 @@ import os
 import cv2
 from keras.utils import to_categorical
 import numpy as np
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
-noOfClasses = 5
+noOfClasses = 7
 
 faceNet = FaceNet()  # loads the facenet model
 faceDetector = FaceDetector()  # loads opencv facedetector
@@ -16,11 +16,13 @@ faceDetector = FaceDetector()  # loads opencv facedetector
 feedForwardNetwork = NN(noOfClasses)
 
 learningRate = 0.01
-epochs = 50
+epochs = 5
 batch_size = 32
 
 xImageData = []
 y = []
+
+user = {}
 
 counter = 0
 
@@ -33,7 +35,7 @@ for students in os.listdir('datas/dataset'):
         embeddingFaceNet = faceNet.predictEmbedding(image)
         xImageData.append(embeddingFaceNet)
         y.append(counter)
-        print(students,counter)
+    user[counter] = students
     counter = counter + 1
 
 x = np.array(xImageData, dtype='float')
@@ -48,7 +50,8 @@ y_test = to_categorical(y_test, num_classes=noOfClasses)
 model = feedForwardNetwork.architecture()
 
 model.compile(optimizer=Adam(learning_rate=learningRate, decay=learningRate / epochs),
-                           loss="categorical_crossentropy")
+              loss="categorical_crossentropy", metrics=['accuracy'])
 model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, shuffle='true',
-                       validation_data=(X_test, y_test))
+          validation_data=(X_test, y_test), )
 model.save('feedNet.h5')
+print(user)

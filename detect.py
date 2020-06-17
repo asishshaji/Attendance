@@ -8,13 +8,14 @@ np.set_printoptions(suppress=True)
 
 # ms 0, asish 1, roshan 2, modi 3, obama 4
 
+user_dict = {0: 'gayathri', 1: 'gal', 2: 'krishnendhu', 3: 'modi', 4: 'obama', 5: 'chrispine'}
+
 faceDetector = FaceDetector()
 faceNet = FaceNet()
 
-# [0.00249214 0.99530739 0.0022005 ]
 model = load_model('feedNet.h5')
 
-path = "/home/asish/PycharmProjects/Attendance/static/modiObama.jpeg"
+path = "/home/asish/PycharmProjects/Attendance/gal.jpg"
 
 croppedImages, _ = faceDetector.detectFaces(path)
 
@@ -26,6 +27,4 @@ for i in range(len(croppedImages)):
     embedVal = faceNet.predictEmbedding(image)
     embedVal = np.expand_dims(embedVal, axis=0)
     result = model.predict(embedVal)[0]
-    print(np.array(result, dtype='float'))
-
-    # print(int(np.argmax()))
+    print(user_dict.get(int(np.argmax(result))), np.max(result))

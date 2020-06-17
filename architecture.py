@@ -1,5 +1,5 @@
-from keras.layers import Dense, Activation, LeakyReLU
-from keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, LeakyReLU
+from tensorflow.keras.models import Sequential
 
 
 class NN:
